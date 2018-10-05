@@ -1,4 +1,6 @@
 TODO LIST:
+Structure Program
+Fill in Functions from Header Files: deck.c, card.c, player.c, etc.
 	
 Anthony Mendez Completed Functions:
 	
