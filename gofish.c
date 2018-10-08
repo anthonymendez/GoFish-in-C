@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include "gofish.h"
 
+/*
+ * Looping Variables
+ */
+int i,j;
+
 int main(int args, char* argv[]) {
     fprintf(stdout, "Put your code here.");
 }
@@ -41,5 +46,12 @@ void game_end() {
 }
 
 char rand_rank_in_hand(struct player* target) {
-    return '0';
+    int rand_index = rand() % target*.hand_size;
+    struct hand* current_hand = target*.card_list;
+
+    for(i = 0; i <= rand_index; i++) {
+        current_hand = current_hand*.next;
+    }
+
+    return &current_hand.rank;
 }
