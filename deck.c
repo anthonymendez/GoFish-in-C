@@ -44,5 +44,31 @@ int shuffle() {
         deck_instance.list[j] = temp;
     }
 
+    /* We never completed the loop so something went wrong */
+    if(i != 0)
+        return -1;
+
+    return 0;
+}
+
+/*
+ * Function: deal_player_cards
+ * ---------------------------
+ * Deal 7 random cards to the player specified in the functions.
+ * Remove the dealt cards from the deck.
+ *
+ * target: pointer to the player to be dealt cards
+ *
+ * returns: 0 if no error, and non-zero on error
+ */
+int deal_player_cards(struct player* target) {
+    int i;
+    for(i = 0; i < 7; i++) {
+       add_card(target, &(deck_instance.list[deck_instance.top_card--])); 
+    }
+
+    if(i != 7)
+        return -1;
+
     return 0;
 }
