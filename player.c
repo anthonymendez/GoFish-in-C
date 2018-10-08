@@ -63,7 +63,6 @@ int remove_card(struct player* target, struct card* old_card) {
         before = current;
         current = current->next;
     }
-    
     if(before == NULL || 
        &(before->top.suit) == NULL || 
        before->top.suit == '\0') {
