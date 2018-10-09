@@ -35,6 +35,10 @@ int add_card(struct player* target, struct card* new_card) {
         target->hand_size++;
     }
 
+    /* Check if we have a book */
+    /* TODO: Check if this belongs here */
+    check_add_book(target);
+
     return 0;
 }
 
@@ -80,4 +84,66 @@ int remove_card(struct player* target, struct card* old_card) {
     }
 
     return 0;
+}
+
+/*
+ * Function: check_add_book
+ * ------------------------
+ *  Check if a player has all 4 cards of the same rank.
+ *  If so, remove those cards from the hand, and add the rank to the book.
+ *  Returns after finding one matching set of 4, so should be called after adding each a new card.
+ * 
+ *  target: pointer to the player to check
+ *  
+ *  Return: a char that indicates the book that was added; return 0 if no book added.
+ */
+char check_add_book(struct player* target) {
+    if(target->card_list == NULL) {
+        return 0;
+    }
+
+    /* Get last card in list because we know that's the only one with the possibility of being a book */
+    struct hand* last_hand = target->card_list;
+    int i = 0;
+    while(i++ < target->hand_size && last_hand->next == NULL){
+        last_hand = last_hand->next;
+    }
+
+    /* Something went wrong when looping */
+    if(i != target->hand_size) {
+        return 0;
+    }
+
+    int count = 1;
+    struct card last_card = last_hand->top;
+    /* Contains the other hands where we have a card of the same rank as last_card */
+    struct hand* first_hand;
+    struct hand* second_hand;
+    struct hand* third_hand;
+    struct hand* current = target->card_list;
+
+    for(i = 0; i < target->hand_size - 1; i++) {
+        if(current->top.rank == last_card.rank) {
+            if(count == 1) {
+                first_hand = current;
+            } else if(count == 2) {
+                second_hand = current;
+            } else if(count == 3) {
+                third_hand = current;
+                count++;
+                break;
+            } else {
+                /* Something went wrong */
+                return 0;
+            }
+            count++;
+        }
+    }
+
+    if(count == 4) {
+        remove_card(target, &first_hand->top);
+        remove_card(target, &second_hand->top);
+        remove_card(target, &third_hand->top);
+        remove_card(target, &last_hand->top);
+    }
 }
