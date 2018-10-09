@@ -96,6 +96,7 @@ int remove_card(struct player* target, struct card* old_card) {
  *  target: pointer to the player to check
  *  
  *  Return: a char that indicates the book that was added; return 0 if no book added.
+ * TODO: TEST
  */
 char check_add_book(struct player* target) {
     if(target->card_list == NULL) {
@@ -147,3 +148,26 @@ char check_add_book(struct player* target) {
         remove_card(target, &last_hand->top);
     }
 }
+
+/*
+ * Function: search
+ * ----------------
+ *  Search a player's hand for a requested rank.
+ *  
+ *  rank: the rank to search for
+ *  target: the player (and their hand) to search
+ *
+ *  Return: If the player has a card of that rank, return 1, else return 0
+ * TODO: TEST
+ */
+int search(struct player* target, char rank) {
+    int i;
+    struct hand* current_hand = target->card_list;
+    for(i = 0; i < target->hand_size && current_hand != NULL; i++) {
+        if(current_hand->top.rank == rank)
+            return 1;
+    }
+
+    return 0;
+}
+
