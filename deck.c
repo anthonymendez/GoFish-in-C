@@ -74,3 +74,19 @@ int deal_player_cards(struct player* target) {
 
     return 0;
 }
+
+/*
+ * Function: next_card
+ * -------------------
+ *  Return a pointer to the top card on the deck.
+ *  Removes that card from the deck. 
+ *
+ *  returns: pointer to the top card on the deck.
+ *  TODO: TEST
+ */
+struct card* next_card() {
+    if(deck_instance.top_card < 0)
+        return NULL;
+
+    return &deck_instance.list[deck_instance.top_card--];
+}
