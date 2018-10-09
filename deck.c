@@ -90,3 +90,15 @@ struct card* next_card() {
 
     return &deck_instance.list[deck_instance.top_card--];
 }
+
+/*
+ * Function: size
+ * --------------
+ *  Return the number of cards left in the current deck.
+ *
+ *  returns: number of cards left in the deck.
+ *  TODO: TEST
+ */
+size_t deck_size() {
+    return deck_instance.top_card + 1;
+}
