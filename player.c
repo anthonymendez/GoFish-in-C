@@ -237,3 +237,44 @@ int game_over(struct player* target) {
     return 1;
 }
 
+/* 
+ * Function: reset_player
+ * ----------------------
+ *
+ *   Reset player by free'ing any memory of cards remaining in hand,
+ *   and re-initializes the book.  Used when playing a new game.
+ * 
+ *   target: player to reset
+ * 
+ *   Return: 0 if no error, and non-zero on error.
+ *   TODO: TEST
+ */
+int reset_player(struct player* target) {
+    /* Free card_list */
+    while(target->card_list != NULL) {
+        remove_card(target, &target->card_list->top);
+    }
+
+    if(target->hand_size != 0 || target->card_list != NULL) {
+        return -1;
+    }
+
+    /* Set book elements to 0 */
+    int i;
+    for(i = 0; i < 7; i++) {
+        target->book[i] = 0;
+    }
+
+    if(i != 7) {
+        return -1;
+    }
+
+    /* Set hand_size to 0 */
+    target->hand_size = 0;
+
+    if(target->hand_size != 0) {
+        return -1;
+    }
+
+    return 0;
+}
