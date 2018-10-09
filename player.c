@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include "player.h"
 
 /*
@@ -277,4 +278,28 @@ int reset_player(struct player* target) {
     }
 
     return 0;
+}
+
+/* 
+ * Function: computer_play
+ * -----------------------
+ *
+ *   Select a rank randomly to play this turn. The player must have at least
+ *   one card of the selected rank in their hand.
+ *
+ *   target: the player's hand to select from
+ *
+ *   Rank: return a valid selected rank
+ *   TODO: TEST
+ */
+char computer_play(struct player* target) {
+    int i;
+    srand(time(0));
+    int randIndex = rand() % target->hand_size;
+    struct hand* current_hand = target->card_list;
+    for(i = 0; i <= randIndex; i++) {
+        current_hand = current_hand->next;
+    }
+
+    return current_hand->top.rank;
 }
