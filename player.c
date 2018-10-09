@@ -205,4 +205,35 @@ int transfer_cards(struct player* src, struct player* dest, char rank) {
     }
 
     return 0;
-} 
+}
+
+/*
+ * Function: game_over
+ * -------------------
+ *   Boolean function to check if a player has 7 books yet
+ *   and the game is over
+ *
+ *   target: the player to check
+ *   
+ *   Return: 1 if game is over, 0 if game is not over
+ *   TODO: TEST
+ */
+int game_over(struct player* target) {
+    if(target == NULL)
+        return -1;
+
+    int i;
+    int count = 0;
+    for(i = 0; i < 7; i++) {
+        if(target->book[i] == 0)
+            return 0;
+    }
+
+    /* Something went wrong with looping */
+    if(i != 7) {
+        return -1;
+    }
+
+    return 1;
+}
+
