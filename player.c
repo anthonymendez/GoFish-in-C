@@ -171,3 +171,38 @@ int search(struct player* target, char rank) {
     return 0;
 }
 
+/*
+ * Function: transfer_cards
+ * ------------------------
+ *   Transfer cards of a given rank from the source player's 
+ *   hand to the destination player's hand. Remove transferred
+ *   cards from the source player's hand. Add transferred cards
+ *   to the destination player's hand.
+ *   
+ *   src: a pointer to the source player
+ *   dest: a pointer to the destination player
+ *   rank: the rank to transfer
+ *
+ *   Return: 0 if no cards found/transferred, <0 if error, otherwise 
+ *   return value indicates number of cards transferred
+ *   TODO: TEST
+ */   
+int transfer_cards(struct player* src, struct player* dest, char rank) {
+    int i;
+    struct hand* src_hand = src->card_list;
+    for(i = 0; i < src->hand_size && src_hand != NULL; i++) {
+        if(src_hand->top.rank == rank) {
+            add_card(src, &src_hand->top);
+            src_hand = src_hand->next;
+            remove_card(src, &src_hand->top);
+        } else {
+            src_hand = src_hand->next;
+        }
+    }
+
+    if(i != src->hand_size) {
+        return -1;
+    }
+
+    return 0;
+} 
