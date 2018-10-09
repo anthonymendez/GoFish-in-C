@@ -142,12 +142,16 @@ char check_add_book(struct player* target) {
         }
     }
 
+    char rank = first_hand->top.rank;
+
     if(count == 4) {
         remove_card(target, &first_hand->top);
         remove_card(target, &second_hand->top);
         remove_card(target, &third_hand->top);
         remove_card(target, &last_hand->top);
     }
+
+    return rank;
 }
 
 /*
@@ -224,7 +228,6 @@ int game_over(struct player* target) {
         return -1;
 
     int i;
-    int count = 0;
     for(i = 0; i < 7; i++) {
         if(target->book[i] == 0)
             return 0;
@@ -302,4 +305,33 @@ char computer_play(struct player* target) {
     }
 
     return current_hand->top.rank;
+}
+
+/* 
+ * Function: user_play
+ * -------------------
+ *
+ *   Read standard input to get rank user wishes to play.  Must perform error
+ *   checking to make sure at least one card in the player's hand is of the 
+ *   requested rank.  If not, print out "Error - must have at least one card from rank to play"
+ *   and then re-prompt the user.
+ *
+ *   target: the player's hand to check
+ * 
+ *   returns: return a valid selected rank
+ *   TODO: TEST
+ */
+char user_play(struct player* target) {
+    char rank;
+    do {
+        fprintf(stdout, "Player 1's turn, enter a Rank: ");
+        scanf("%s", &rank);
+
+        if(search(target, rank))
+            break;
+
+        fprintf(stdout, "Error - must have at least one card from rank to play\n");
+    }while(1);
+
+    return rank;
 }
