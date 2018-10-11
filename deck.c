@@ -65,8 +65,12 @@ int shuffle() {
  */
 int deal_player_cards(struct player* target) {
     int i;
+    struct card* new_card;
     for(i = 0; i < 7; i++) {
-       add_card(target, &(deck_instance.list[deck_instance.top_card--])); 
+        new_card = next_card();
+        if(new_card == NULL)
+            break; /* Return -1, deck empty */
+        add_card(target, new_card);
     }
 
     if(i != 7)

@@ -13,7 +13,7 @@
  *  returns: return 0 if no error, non-zero otherwise
  */
 int add_card(struct player* target, struct card* new_card) {
-    /* Make sure our hand is empty */
+    /* Make sure our hand is empty */ /* TODO: What is this comment to the left? */
     if(target->hand_size >= 7)
         return -1;
 
@@ -37,7 +37,7 @@ int add_card(struct player* target, struct card* new_card) {
     }
 
     /* Check if we have a book */
-    /* TODO: Check if this belongs here */
+    /* TODO: Check if this belongs here (it almost certainly does) */
     check_add_book(target);
 
     return 0;
@@ -54,6 +54,7 @@ int add_card(struct player* target, struct card* new_card) {
  *  returns: return 0 if no error, non-zero otherwise
  */
 int remove_card(struct player* target, struct card* old_card) {
+    /* TODO: Comments for this function */
     if(target->hand_size <= 0)
         return -1;
 
@@ -63,7 +64,7 @@ int remove_card(struct player* target, struct card* old_card) {
     for(i = 0; i < target->hand_size; i++) {
         if(current != NULL ||
            (current->top.suit == old_card->suit && 
-           current->top.rank == old_card->rank))
+            current->top.rank == old_card->rank))
             break;
         before = current;
         current = current->next;
@@ -208,6 +209,8 @@ int transfer_cards(struct player* src, struct player* dest, char rank) {
     if(i != src->hand_size) {
         return -1;
     }
+    
+    /* TODO (bugfix): Actually transfer the cards instead of just deleting them */
 
     return 0;
 }
