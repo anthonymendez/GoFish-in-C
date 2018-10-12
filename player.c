@@ -217,16 +217,21 @@ int search(struct player* target, char rank) {
  *
  *   Return: 0 if no cards found/transferred, <0 if error, otherwise 
  *   return value indicates number of cards transferred
- *   TODO: TEST
  */   
 int transfer_cards(struct player* src, struct player* dest, char rank) {
     int i;
+    int transferred = 0;
     struct hand* src_hand = src->card_list;
-    for(i = 0; i < src->hand_size && src_hand != NULL; i++) {
+    /* Go through, add all matching cards to dest hand,
+     * remove from src hand, set src hand to next hand,
+     * and increment transferred any matching cards
+     */
+    for(i = 0; src_hand != NULL; i++) {
         if(src_hand->top.rank == rank) {
-            add_card(src, &src_hand->top);
-            src_hand = src_hand->next;
+            add_card(dest, &src_hand->top);
             remove_card(src, &src_hand->top);
+            src_hand = src_hand->next;
+            transferred++;
         } else {
             src_hand = src_hand->next;
         }
@@ -235,10 +240,8 @@ int transfer_cards(struct player* src, struct player* dest, char rank) {
     if(i != src->hand_size) {
         return -1;
     }
-    
-    /* TODO (bugfix): Actually transfer the cards instead of just deleting them */
 
-    return 0;
+    return transferred;
 }
 
 /*
