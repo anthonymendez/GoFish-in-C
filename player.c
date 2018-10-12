@@ -15,7 +15,6 @@
 int add_card(struct player* target, struct card* new_card) {
     /* Empty Hand Linked List */
     if(target->hand_size == 0) {
-        target->hand_size++;
         target->card_list = (struct hand*)malloc(sizeof(struct hand));
         target->card_list->top = *new_card;
         target->card_list->next = NULL;
@@ -26,11 +25,13 @@ int add_card(struct player* target, struct card* new_card) {
         for(i = 0; i < target->hand_size-1; i++) {
             current = current->next;
         }
+        if(i != target->hand_size-1)
+            return -1;
         current->next = (struct hand*)malloc(sizeof(struct hand));
         current->next->top = *new_card;
         current->next->next = NULL;
-        target->hand_size++;
     }
+    target->hand_size++;
 
     /* Check if we have a book */
     check_add_book(target);
@@ -64,7 +65,7 @@ int remove_card(struct player* target, struct card* old_card) {
     struct hand* current = target->card_list;
     struct hand* before = NULL;
     for(i = 0; i < target->hand_size; i++) {
-        if(current != NULL ||
+        if(current != NULL &&
            (current->top.suit == old_card->suit && 
             current->top.rank == old_card->rank)) {
             found = 1;
@@ -74,17 +75,20 @@ int remove_card(struct player* target, struct card* old_card) {
         current = current->next;
     }
     /* Card not found so we return -1 */
-    if(!found) {
+    if(found == 0) {
         return -1;
     }
 
     if(before == NULL || 
        &(before->top.suit) == NULL || 
-       before->top.suit == '\0') {
+       before->top.suit == '\0' ||
+       before->top.suit == 0) {
         /* Handle removing card from beginning of the list */
         target->card_list = target->card_list->next;
         free(current);
         target->hand_size--;
+
+        return 0;
     } else if(current == NULL || 
               &(current->top.suit) == NULL || 
               current->top.suit == '\0') {
@@ -99,9 +103,11 @@ int remove_card(struct player* target, struct card* old_card) {
         before->next = current->next;
         free(current);
         target->hand_size--;
+
+        return 0;
     }
 
-    return 0;
+    return -1;
 }
 
 /*
@@ -126,10 +132,6 @@ char check_add_book(struct player* target) {
     while(i++ < target->hand_size && last_hand->next != NULL){
         last_hand = last_hand->next;
     }
-    /* Something went wrong when looping */
-    if(i != target->hand_size) {
-        return 0;
-    }
     int count = 1;
     struct card last_card = last_hand->top;
     /* Contains the other hands where we have a card of the same rank as last_card */
@@ -137,7 +139,7 @@ char check_add_book(struct player* target) {
     struct hand* second_hand;
     struct hand* third_hand;
     struct hand* current = target->card_list;
-    for(i = 0; i < target->hand_size - 1; i++) {
+    for(i = 0; i < target->hand_size - 1 && current != NULL; i++) {
         if(current->top.rank == last_card.rank) {
             if(count == 1) {
                 first_hand = current;
@@ -153,8 +155,8 @@ char check_add_book(struct player* target) {
             }
             count++;
         }
+        current = current->next;
     }
-
     /* We count is 4, then we have 4 cards of the same rank 
      * We remove the cards from the players hand, add the
      * rank to their book, and return the rank.
@@ -253,7 +255,6 @@ int transfer_cards(struct player* src, struct player* dest, char rank) {
  *   target: the player to check
  *   
  *   Return: 1 if game is over, 0 if game is not over
- *   TODO: TEST
  */
 int game_over(struct player* target) {
     if(target == NULL)
@@ -261,7 +262,7 @@ int game_over(struct player* target) {
 
     int i;
     for(i = 0; i < 7; i++) {
-        if(target->book[i] == 0)
+        if(target->book[i] == '\0' || target->book[i] == 0)
             return 0;
     }
 
