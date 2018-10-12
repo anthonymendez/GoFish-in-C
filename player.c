@@ -330,10 +330,10 @@ int reset_player(struct player* target) {
  */
 char computer_play(struct player* target) {
     int i;
-    srand(time(0));
     int randIndex = rand() % target->hand_size;
+    fprintf(stdout, "ind:%d\n", randIndex);
     struct hand* current_hand = target->card_list;
-    for(i = 0; i <= randIndex; i++) {
+    for(i = 0; i < randIndex; i++) {
         current_hand = current_hand->next;
     }
 
