@@ -326,7 +326,6 @@ int reset_player(struct player* target) {
  *   target: the player's hand to select from
  *
  *   Rank: return a valid selected rank
- *   TODO: TEST
  */
 char computer_play(struct player* target) {
     int i;
