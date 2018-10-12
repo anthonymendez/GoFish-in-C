@@ -114,7 +114,6 @@ int remove_card(struct player* target, struct card* old_card) {
  *  target: pointer to the player to check
  *  
  *  Return: a char that indicates the book that was added; return 0 if no book added.
- * TODO: TEST
  */
 char check_add_book(struct player* target) {
     if(target->card_list == NULL) {
@@ -124,15 +123,13 @@ char check_add_book(struct player* target) {
     /* Get last card in list because we know that's the only one with the possibility of being a book */
     struct hand* last_hand = target->card_list;
     int i = 0;
-    while(i++ < target->hand_size && last_hand->next == NULL){
+    while(i++ < target->hand_size && last_hand->next != NULL){
         last_hand = last_hand->next;
     }
-
     /* Something went wrong when looping */
     if(i != target->hand_size) {
         return 0;
     }
-
     int count = 1;
     struct card last_card = last_hand->top;
     /* Contains the other hands where we have a card of the same rank as last_card */
@@ -140,7 +137,6 @@ char check_add_book(struct player* target) {
     struct hand* second_hand;
     struct hand* third_hand;
     struct hand* current = target->card_list;
-
     for(i = 0; i < target->hand_size - 1; i++) {
         if(current->top.rank == last_card.rank) {
             if(count == 1) {
@@ -159,16 +155,29 @@ char check_add_book(struct player* target) {
         }
     }
 
-    char rank = first_hand->top.rank;
-
+    /* We count is 4, then we have 4 cards of the same rank 
+     * We remove the cards from the players hand, add the
+     * rank to their book, and return the rank.
+     */
     if(count == 4) {
+        char rank = first_hand->top.rank;
+
+        for(i = 0; i < 7; i++) {
+            if(target->book[i] == 0 || target->book[i] == '\0') {
+                target->book[i] = rank;
+                break;
+            }
+        }
+
         remove_card(target, &first_hand->top);
         remove_card(target, &second_hand->top);
         remove_card(target, &third_hand->top);
         remove_card(target, &last_hand->top);
+
+        return rank;
     }
 
-    return rank;
+    return 0;
 }
 
 /*
