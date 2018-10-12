@@ -42,6 +42,8 @@ void game_loop();
  */
 int game_end();
 
+const char* pR(char r);
+
 /*
  * Instance Variables: current, next_player
  *
