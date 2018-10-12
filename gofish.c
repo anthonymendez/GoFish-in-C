@@ -41,7 +41,9 @@ int main(int args, char* argv[]) {
     //return testMain(args, argv); /* TODO: Remove after testing */
     do {
         game_start();
-        game_loop();
+        do {
+            game_loop(); /* Play a round */
+        } while(!game_over(current));
     } while(game_end());
     fprintf(stdout, "Exiting\n");
 }
@@ -75,7 +77,21 @@ void game_start() {
  */
 void game_loop() {
     fprintf(stdout, "(debug)###BEGIN game_loop###\n");
+    /* Print ex "Player 1's Hand - 5S 3H JC 9D 9H AS QC 7D" */
+    /* Print ex "Player 1's Book - 3 2 J A 6 Q" */
+    /* Print ex "Player 2's Book - 9 5 10 4 5 K" */
+    char r;
+    if(current == &user) {
+        r = user_play(current);
+    } else { /* Computer's turn */
+        r = computer_play(current);
+    }
     
+    if(search(next_player, r) == 0) { /* Go fish, next player's turn */
+        //fprintf(stdout, "Player %d has no \n");
+        //fprintf(stdout, "Go Fish, Player %d draws a card\n"); /* TODO: Separate with 'if' for user/computer */
+        //fprintf(stdout, "Player %d's turn", ((current == &user) ? 1 : 2));
+    }
 }
 
 /*
@@ -112,4 +128,17 @@ int game_end() {
     }
     /* TODO: Make sure yn == 'N', otherwise prompt again? */
     return 0;
+}
+
+/* TODO: Document! Including in header! */
+const char* pR(char r) { /* printableRank */
+    static char ten[] = "10";
+    if(r == 'T') {
+        return ten;
+    } else {
+        static char rS[2];
+        rS[0] = r;
+        rS[1] = '\0';
+        return rS;
+    }
 }
