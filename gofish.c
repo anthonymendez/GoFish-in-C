@@ -1,7 +1,8 @@
 #include <stdio.h>
-#include "deck.h"
+#include "gofish.h"
 
-int main(int args, char* argv[]) {
+/* TODO: Remove after testing */
+int testMain(int args, char* argv[]) {
     int i,j;
     shuffle();
     for(i = 0; i < 52; i++) {
@@ -34,4 +35,81 @@ int main(int args, char* argv[]) {
     deal_player_cards(&user);
     fprintf(stdout, "cards dealt\n");
     deal_player_cards(&computer);
+}
+
+int main(int args, char* argv[]) {
+    //return testMain(args, argv); /* TODO: Remove after testing */
+    do {
+        game_start();
+        game_loop();
+    } while(game_end());
+    fprintf(stdout, "Exiting\n");
+}
+
+/*
+ * Function: game_start
+ * --------------------
+ * Called at the start of a new game.
+ * Shuffles the deck, resets instances of players,
+ * deals cards to each player, and sets the human player
+ * as the current player. 
+ */
+void game_start() {
+    fprintf(stdout, "(debug)###BEGIN game_start###\n");
+    reset_player(&user);
+    reset_player(&computer);
+    
+    shuffle();
+    deal_player_cards(&user);
+    deal_player_cards(&computer);
+    
+    current = &user;
+    next_player = &computer;
+}
+
+/*
+ * Function: game_loop
+ * -------------------
+ * Called after game_start.
+ * For more info, read notes.txt
+ */
+void game_loop() {
+    fprintf(stdout, "(debug)###BEGIN game_loop###\n");
+    
+}
+
+/*
+ * Function: game_end
+ * ------------------
+ * Called after someone wins in 
+ * GoFish from game_loop.
+ * Declares the winner and asks the human
+ * if s/he wants to play again.
+ * If Y is entered, go to game_start.
+ * Else if N is entered, end game and close program.
+ * 
+ * Return: 1 to play again, 0 to exit
+ */
+int game_end() {
+    fprintf(stdout, "(debug)###BEGIN game_end###\n");
+    /* Count books of loser */
+    int count = 0;
+    while(next_player->book[count] != 0 && count < 6) { /* Last slot (index 6) will always be empty since they lost */
+        count++;
+    }
+    if(current == &user) { /* User won :D */
+        fprintf(stdout, "Player 1 Wins! 7-%d\n", count);
+    } else {
+        fprintf(stdout, "Player 2 Wins! 7-%d\n", count);
+    }
+    /* TODO: Make sure printouts are exactly correct */
+    
+    fprintf(stdout, "Do you want to play again [Y/N]: ");
+    char yn;
+    scanf("%s", &yn);
+    if(yn == 'Y') {
+        return 1;
+    }
+    /* TODO: Make sure yn == 'N', otherwise prompt again? */
+    return 0;
 }

@@ -37,19 +37,10 @@ void game_loop();
  * if s/he wants to play again.
  * If Y is entered, go to game_start.
  * Else if N is entered, end game and close program.
+ * 
+ * Return: 1 to play again, 0 to exit
  */
-void game_end();
-
-/*
- * Function: rand_rank_in_hand
- * ---------------------------
- * Returns a random rank in a player's hand.
- *
- * target: the target player to pick a rank
- *
- * returns: return char rank if no error, -1 otherwise
- */
-char rand_rank_in_hand(struct player* target);
+int game_end();
 
 /*
  * Instance Variables: current, next_player
