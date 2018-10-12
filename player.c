@@ -189,7 +189,6 @@ char check_add_book(struct player* target) {
  *  target: the player (and their hand) to search
  *
  *  Return: If the player has a card of that rank, return 1, else return 0
- * TODO: TEST
  */
 int search(struct player* target, char rank) {
     int i;
@@ -197,6 +196,8 @@ int search(struct player* target, char rank) {
     for(i = 0; i < target->hand_size && current_hand != NULL; i++) {
         if(current_hand->top.rank == rank)
             return 1;
+
+        current_hand = current_hand->next;
     }
 
     return 0;
