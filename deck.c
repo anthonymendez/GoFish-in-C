@@ -64,20 +64,24 @@ int shuffle() {
  */
 int deal_player_cards(struct player* target) {
     int i;
+    size_t hand_size = target->hand_size;
     struct card* new_card;
     for(i = 0; i < 7; i++) {
-        if(deck_size() < 0)
+        if(deck_size() <= 0) {
             return -1;
+        }
 
         new_card = next_card();
-        if(new_card == NULL)
+        if(new_card == NULL) {
             return -1;
+        }
 
         add_card(target, new_card);
     }
 
-    if(i != 7)
+    if(i != 7) {
         return -1;
+    }
 
     return 0;
 }
