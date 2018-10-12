@@ -307,6 +307,7 @@ char computer_play(struct player* target) {
         current_hand = current_hand->next;
     }
 
+    fprintf(stdout, "Player 2's turn, enter a Rank: %c\n", current_hand->top.rank);
     return current_hand->top.rank;
 }
 
