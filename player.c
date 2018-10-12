@@ -13,10 +13,6 @@
  *  returns: return 0 if no error, non-zero otherwise
  */
 int add_card(struct player* target, struct card* new_card) {
-    /* Make sure our hand is empty */ /* TODO: What is this comment to the left? */
-    if(target->hand_size >= 7)
-        return -1;
-
     /* Empty Hand Linked List */
     if(target->hand_size == 0) {
         target->hand_size++;
@@ -37,7 +33,6 @@ int add_card(struct player* target, struct card* new_card) {
     }
 
     /* Check if we have a book */
-    /* TODO: Check if this belongs here (it almost certainly does) */
     check_add_book(target);
 
     return 0;
@@ -54,32 +49,53 @@ int add_card(struct player* target, struct card* new_card) {
  *  returns: return 0 if no error, non-zero otherwise
  */
 int remove_card(struct player* target, struct card* old_card) {
-    /* TODO: Comments for this function */
+    /* If our hand_size is empty, we return -1 */
     if(target->hand_size <= 0)
         return -1;
 
+    /* Go through and find our card from old_card 
+     * If we find it, we set found = 1, and break
+     * out of the loop.
+     * If not, we go through the entire loop, and
+     * return -1
+     */
     int i;
+    int found = 0;
     struct hand* current = target->card_list;
     struct hand* before = NULL;
     for(i = 0; i < target->hand_size; i++) {
         if(current != NULL ||
            (current->top.suit == old_card->suit && 
-            current->top.rank == old_card->rank))
+            current->top.rank == old_card->rank)) {
+            found = 1;
             break;
+        }
         before = current;
         current = current->next;
     }
+    /* Card not found so we return -1 */
+    if(!found) {
+        return -1;
+    }
+
     if(before == NULL || 
        &(before->top.suit) == NULL || 
        before->top.suit == '\0') {
+        /* Handle removing card from beginning of the list */
         target->card_list = target->card_list->next;
         free(current);
         target->hand_size--;
     } else if(current == NULL || 
               &(current->top.suit) == NULL || 
               current->top.suit == '\0') {
+        /* If we're getting NULL from our pointer,
+         * char memory address or we're getting 0 
+         * from our char, we return -1 as something 
+         * went wrong.
+         */
         return -1;
     } else {
+        /* Handle removing card from middle of the list */
         before->next = current->next;
         free(current);
         target->hand_size--;
@@ -307,6 +323,7 @@ char computer_play(struct player* target) {
         current_hand = current_hand->next;
     }
 
+    fprintf(stdout, "Player 2's turn, enter a Rank: %c\n", current_hand->top.rank);
     return current_hand->top.rank;
 }
 

@@ -29,9 +29,6 @@ int shuffle() {
     /* We never completed the loop so something went wrong */
     if(i != 4 || j != 13)
         return -1;
-
-    } else {
-        deck_instance.top_card = 51;
     }
 
     /* Shuffle Deck 
@@ -50,6 +47,8 @@ int shuffle() {
     if(i != 0)
         return -1;
 
+    /* Reset Top Card Counter */
+    deck_instance.top_card = 52;
     return 0;
 }
 
@@ -67,9 +66,13 @@ int deal_player_cards(struct player* target) {
     int i;
     struct card* new_card;
     for(i = 0; i < 7; i++) {
+        if(deck_size() < 0)
+            return -1;
+
         new_card = next_card();
         if(new_card == NULL)
-            break; /* Return -1, deck empty */
+            return -1;
+
         add_card(target, new_card);
     }
 
@@ -84,15 +87,14 @@ int deal_player_cards(struct player* target) {
  * -------------------
  *  Return a pointer to the top card on the deck.
  *  Removes that card from the deck. 
- *
+ *  Top_Card starts at 52 so we decrement then use that value as the index
  *  returns: pointer to the top card on the deck.
- *  TODO: TEST
  */
 struct card* next_card() {
-    if(deck_instance.top_card < 0)
+    if(deck_instance.top_card <= 0)
         return NULL;
 
-    return &deck_instance.list[deck_instance.top_card--];
+    return &deck_instance.list[--deck_instance.top_card];
 }
 
 /*
@@ -101,8 +103,12 @@ struct card* next_card() {
  *  Return the number of cards left in the current deck.
  *
  *  returns: number of cards left in the deck.
- *  TODO: TEST
  */
 size_t deck_size() {
-    return deck_instance.top_card + 1;
+    if(deck_instance.list[0].suit == 0 || 
+       deck_instance.list[0].rank == 0 ||
+       deck_instance.top_card < 0)
+        return 0;
+
+    return deck_instance.top_card;
 }
