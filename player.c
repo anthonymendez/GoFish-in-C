@@ -13,10 +13,6 @@
  *  returns: return 0 if no error, non-zero otherwise
  */
 int add_card(struct player* target, struct card* new_card) {
-    /* Make sure our hand is empty */ /* TODO: What is this comment to the left? */
-    if(target->hand_size >= 7)
-        return -1;
-
     /* Empty Hand Linked List */
     if(target->hand_size == 0) {
         target->hand_size++;
