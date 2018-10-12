@@ -8,6 +8,7 @@ int testMain(int args, char* argv[]) {
 }
 
 int main(int args, char* argv[]) {
+    srand(time(0));
     //return testMain(args, argv); /* TODO: Remove after testing */
     do {
         game_start();
