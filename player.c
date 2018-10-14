@@ -357,15 +357,22 @@ char user_play(struct player* target) {
     char rank;
     do {
         fprintf(stdout, "Player 1's turn, enter a Rank: ");
-        char buf[3];
-        scanf("%2s", buf);
+        char buf[4] = "";
+        scanf("%3s", buf); /* If {Enter} is pressed before other input, this still blocks. I believe this is fine. */
+        while(getchar() != '\n'); /* Clear anything after the 3rd character from stdin */
 
-        if(buf[0] == '1' && buf[1] == '0')
+        /* Check for a "10" */
+        if(buf[0] == '1' && buf[1] == '0' && buf[2] == '\0')
             rank = 'T';
-        else
+        else if(buf[1] == '\0')
             rank = buf[0];
-        
-        if(search(target, rank) && buf[0] != 'T')
+        else { /* Invalid input length */
+            fprintf(stdout, "Error - must have at least one card from rank to play\n");
+            continue;
+        }
+
+        /* If the selected rank is in the player's hand, return it */
+        if(search(target, rank) && buf[0] != 'T') /* Input 'T' improperly results in a successful search */
             break;
 
         fprintf(stdout, "Error - must have at least one card from rank to play\n");
