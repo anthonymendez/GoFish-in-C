@@ -64,7 +64,6 @@ int shuffle() {
  */
 int deal_player_cards(struct player* target) {
     int i;
-    size_t hand_size = target->hand_size;
     struct card* new_card;
     for(i = 0; i < 7; i++) {
         if(deck_size() <= 0) {

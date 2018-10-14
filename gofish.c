@@ -1,20 +1,33 @@
 #include <stdio.h>
+#include <time.h>
 #include "gofish.h"
 
-/* TODO: Remove after testing */
-int testMain(int args, char* argv[]) {
-    int i,j;
-    shuffle();
+/* TODO: Remove after testing! */
+void test() {
+    game_start();
+    current->book[0] = '3';
+    current->book[1] = 'T';
+    current->book[2] = 'Q';
+    print_hand(current);
+    print_book(current);
+    fprintf(stdout, "book[3] (between --'s): --%c-- (%d)\n", current->book[3], current->book[3] == 0);
 }
 
 int main(int args, char* argv[]) {
-    srand(time(0));
-    //return testMain(args, argv); /* TODO: Remove after testing */
+    srand(time(NULL));
+    
+    /* TODO: Remove after testing! */
+    test();
+    return;
+    
     do {
         game_start();
         do {
             game_loop(); /* Play a round */
-        } while(!game_over(current));
+            if(game_over(current))
+                break;
+            current = next_player;
+        } while(1);
     } while(game_end());
     fprintf(stdout, "Exiting\n");
 }
@@ -103,13 +116,44 @@ int game_end() {
 
 /* TODO: Document! Including in header! */
 const char* pR(char r) { /* printableRank */
-    static char ten[] = "10";
     if(r == 'T') {
+        static char ten[] = "10";
         return ten;
-    } else {
-        static char rS[2];
-        rS[0] = r;
-        rS[1] = '\0';
-        return rS;
     }
+    static char rS[2];
+    rS[0] = r;
+    rS[1] = '\0';
+    return rS;
+}
+
+/* TODO: Document! Including in header! */
+void print_hand(struct player* target) {
+    if(target->hand_size == 0)
+        return;
+
+    struct hand* current = target->card_list;
+    fprintf(stdout, "%s%c", pR(current->top.rank), current->top.suit);
+
+    int i;
+    for(i = 1; i < target->hand_size; i++) {
+        current = current->next;
+        fprintf(stdout, " %s%c", pR(current->top.rank), current->top.suit);
+    }
+    
+    fprintf(stdout, "\n");
+}
+
+/* TODO: Document! Including in header! */
+void print_book(struct player* target) {
+    if(target == NULL || target->book == NULL || target->book[0] == '\0' || target->book[0] == 0)
+        return;
+
+    fprintf(stdout, "%s", pR(target->book[0]));
+
+    int i = 1;
+    while(i < 7 && target->book[i] != '\0' && target->book[i] != 0) {
+        fprintf(stdout, " %s", pR(target->book[i++]));
+    }
+    
+    fprintf(stdout, "\n");
 }

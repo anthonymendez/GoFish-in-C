@@ -44,6 +44,10 @@ int game_end();
 
 const char* pR(char r);
 
+void print_hand(struct player* target);
+
+void print_book(struct player* target);
+
 /*
  * Instance Variables: current, next_player
  *
