@@ -11,6 +11,9 @@ void test() {
     print_hand(current);
     print_book(current);
     fprintf(stdout, "book[3] (between --'s): --%c-- (%d)\n", current->book[3], current->book[3] == 0);
+    fprintf(stdout, "userplay:\n");
+    char upo = user_play(current);
+    fprintf(stdout, "userplay output (between --'s): --%c--\n", upo);
 }
 
 int main(int args, char* argv[]) {
@@ -190,8 +193,10 @@ const char* pR(char r) { /* printableRank */
 
 /* TODO: Document! Including in header! */
 void print_hand(struct player* target) {
-    if(target->hand_size == 0)
+    if(target->hand_size == 0) {
+        fprintf(stdout, "\n");
         return;
+    }
 
     struct hand* h = target->card_list;
     fprintf(stdout, "%s%c", pR(h->top.rank), h->top.suit);
@@ -207,8 +212,10 @@ void print_hand(struct player* target) {
 
 /* TODO: Document! Including in header! */
 void print_book(struct player* target) {
-    if(target == NULL || target->book == NULL || target->book[0] == '\0' || target->book[0] == 0)
+    if(target == NULL || target->book == NULL || target->book[0] == '\0' || target->book[0] == 0) {
+        fprintf(stdout, "\n");
         return;
+    }
 
     fprintf(stdout, "%s", pR(target->book[0]));
 

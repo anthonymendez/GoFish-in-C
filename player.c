@@ -357,9 +357,15 @@ char user_play(struct player* target) {
     char rank;
     do {
         fprintf(stdout, "Player 1's turn, enter a Rank: ");
-        scanf("%s", &rank);
+        char buf[3];
+        scanf("%2s", buf);
 
-        if(search(target, rank))
+        if(buf[0] == '1' && buf[1] == '0')
+            rank = 'T';
+        else
+            rank = buf[0];
+        
+        if(search(target, rank) && buf[0] != 'T')
             break;
 
         fprintf(stdout, "Error - must have at least one card from rank to play\n");
