@@ -15,11 +15,11 @@ void test() {
 
 int main(int args, char* argv[]) {
     srand(time(NULL));
-    
+
     /* TODO: Remove after testing! */
     test();
-    return;
-    
+    return 0;
+
     do {
         game_start();
         do {
@@ -30,6 +30,7 @@ int main(int args, char* argv[]) {
         } while(1);
     } while(game_end());
     fprintf(stdout, "Exiting\n");
+    return 0;
 }
 
 /*
@@ -44,11 +45,12 @@ void game_start() {
     fprintf(stdout, "(debug)###BEGIN game_start###\n");
     reset_player(&user);
     reset_player(&computer);
-    
+
+    fprintf(stdout, "Shuffling deck...\n\n");
     shuffle();
     deal_player_cards(&user);
     deal_player_cards(&computer);
-    
+
     current = &user;
     next_player = &computer;
 }
@@ -61,21 +63,81 @@ void game_start() {
  */
 void game_loop() {
     fprintf(stdout, "(debug)###BEGIN game_loop###\n");
-    /* Print ex "Player 1's Hand - 5S 3H JC 9D 9H AS QC 7D" */
-    /* Print ex "Player 1's Book - 3 2 J A 6 Q" */
-    /* Print ex "Player 2's Book - 9 5 10 4 5 K" */
+
+    /* Print hand and book statuses */
+    fprintf(stdout, "Player 1's Hand - ");
+    print_hand(&user);
+    fprintf(stdout, "Player 1's Book - ");
+    print_book(&user);
+    fprintf(stdout, "Player 2's Book - ");
+    print_book(&computer);
+
+    struct player* other_player = (current == &user) ? &computer : &user;
+
+    /* TODO:
+    "If a player runs out of cards, then they have to draw a card on their next turn.
+    It does not end the game."
+    So, here, if hand size is 0:
+        Draw a card
+        next_player = other_player;
+        return
+        Printout???
+    */
+
     char r;
     if(current == &user) {
         r = user_play(current);
     } else { /* Computer's turn */
         r = computer_play(current);
     }
-    
-    if(search(next_player, r) == 0) { /* Go fish, next player's turn */
-        //fprintf(stdout, "Player %d has no \n");
-        //fprintf(stdout, "Go Fish, Player %d draws a card\n"); /* TODO: Separate with 'if' for user/computer */
-        //fprintf(stdout, "Player %d's turn", ((current == &user) ? 1 : 2));
+
+    if(search(next_player, r) == 0) { /* Go Fish */
+        fprintf(stdout, "Player %d has no %s's\n", ((current == &user) ? 2 : 1), pR(r));
+        struct card* fished_card = next_card(); /* TODO: Handle empty deck (here and elsewhere) */
+        if(current == &user)
+            fprintf(stdout, "Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
+        else
+            fprintf(stdout, "Go Fish, Player 2 draws a card\n");
+
+        int next_book_i = 0;
+        while(current->book[next_book_i] != 0) {
+            next_book_i++;
+        }
+
+        add_card(current, fished_card);
+        if(current->book[next_book_i] != 0)
+            fprintf(stdout, "Player %d books %s", ((current == &user) ? 1 : 2), pR(fished_card->rank));
+
+        /* If a book was added or the asked rank was drawn, play again */
+        if(current->book[next_book_i] != 0 || fished_card->rank == r) {
+            next_player = current;
+            fprintf(stdout, "Player %d gets another turn", ((current == &user) ? 1 : 2));
+        } else { /* Otherwise, switch players' turns */
+            next_player = other_player;
+            fprintf(stdout, "Player %d's turn", ((next_player == &user) ? 1 : 2));
+        }
+    } else { /* Transfer cards, play again */
+        //TODO: "has" PRINTOUTS!
+        int next_book_i = 0;
+        while(current->book[next_book_i] != 0) {
+            next_book_i++;
+        }
+
+        transfer_cards(other_player, current, r);
+        if(current->book[next_book_i] != 0)
+            fprintf(stdout, "Player %d books %s", ((current == &user) ? 1 : 2), pR(r));
+
+        /* If a book was added, play again */
+        if(current->book[next_book_i] != 0) {
+            next_player = current;
+            fprintf(stdout, "Player %d gets another turn", ((current == &user) ? 1 : 2));
+        } else { /* Otherwise, switch players' turns */
+            next_player = other_player;
+            fprintf(stdout, "Player %d's turn", ((next_player == &user) ? 1 : 2));
+        }
     }
+
+    fprintf(stdout, "\n");
 }
 
 /*
@@ -103,7 +165,7 @@ int game_end() {
         fprintf(stdout, "Player 2 Wins! 7-%d\n", count);
     }
     /* TODO: Make sure printouts are exactly correct */
-    
+
     fprintf(stdout, "Do you want to play again [Y/N]: ");
     char yn;
     scanf("%s", &yn);
@@ -131,15 +193,15 @@ void print_hand(struct player* target) {
     if(target->hand_size == 0)
         return;
 
-    struct hand* current = target->card_list;
-    fprintf(stdout, "%s%c", pR(current->top.rank), current->top.suit);
+    struct hand* h = target->card_list;
+    fprintf(stdout, "%s%c", pR(h->top.rank), h->top.suit);
 
     int i;
     for(i = 1; i < target->hand_size; i++) {
-        current = current->next;
-        fprintf(stdout, " %s%c", pR(current->top.rank), current->top.suit);
+        h = h->next;
+        fprintf(stdout, " %s%c", pR(h->top.rank), h->top.suit);
     }
-    
+
     fprintf(stdout, "\n");
 }
 
@@ -154,6 +216,6 @@ void print_book(struct player* target) {
     while(i < 7 && target->book[i] != '\0' && target->book[i] != 0) {
         fprintf(stdout, " %s", pR(target->book[i++]));
     }
-    
+
     fprintf(stdout, "\n");
 }
