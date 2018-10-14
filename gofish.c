@@ -20,8 +20,8 @@ int main(int args, char* argv[]) {
     srand(time(NULL));
 
     /* TODO: Remove after testing! */
-    test();
-    return 0;
+    //test();
+    //return 0;
 
     do {
         game_start();
@@ -45,14 +45,19 @@ int main(int args, char* argv[]) {
  * as the current player. 
  */
 void game_start() {
-    fprintf(stdout, "(debug)###BEGIN game_start###\n");
     reset_player(&user);
     reset_player(&computer);
 
-    fprintf(stdout, "Shuffling deck...\n\n");
+    fprintf(stdout, "Shuffling deck...\n");
     shuffle();
     deal_player_cards(&user);
     deal_player_cards(&computer);
+
+    /* It is possible to be dealt, at most, one book */
+    if(user.book[0] != 0)
+        fprintf(stdout, "Player 1 books %s", pR(user.book[0]));
+    if(computer.book[0] != 0)
+        fprintf(stdout, "Player 2 books %s", pR(computer.book[0]));
 
     current = &user;
     next_player = &computer;
@@ -65,11 +70,13 @@ void game_start() {
  * For more info, read notes.txt
  */
 void game_loop() {
-    fprintf(stdout, "(debug)###BEGIN game_loop###\n");
+    fprintf(stdout, "\n");
 
     /* Print hand and book statuses */
     fprintf(stdout, "Player 1's Hand - ");
     print_hand(&user);
+    fprintf(stdout, "(debug)Player 2's Hand - ");
+    print_hand(&computer);
     fprintf(stdout, "Player 1's Book - ");
     print_book(&user);
     fprintf(stdout, "Player 2's Book - ");
@@ -79,7 +86,7 @@ void game_loop() {
 
     /* TODO:
     "If a player runs out of cards, then they have to draw a card on their next turn.
-    It does not end the game."
+    It does not end the game." -Irwin (piazza)
     So, here, if hand size is 0:
         Draw a card
         next_player = other_player;
@@ -87,60 +94,78 @@ void game_loop() {
         Printout???
     */
 
+    /* Get rank guess input */
     char r;
-    if(current == &user) {
+    if(current == &user) { /* User's turn */
         r = user_play(current);
     } else { /* Computer's turn */
         r = computer_play(current);
     }
 
-    if(search(next_player, r) == 0) { /* Go Fish */
-        fprintf(stdout, "Player %d has no %s's\n", ((current == &user) ? 2 : 1), pR(r));
+    /* Handle input */
+    if(search(other_player, r) == 0) { /* Go Fish */
+        fprintf(stdout, "    - Player %d has no %s's\n", ((current == &user) ? 2 : 1), pR(r));
         struct card* fished_card = next_card(); /* TODO: Handle empty deck (here and elsewhere) */
         if(current == &user)
-            fprintf(stdout, "Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
+            fprintf(stdout, "    - Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
         else
-            fprintf(stdout, "Go Fish, Player 2 draws a card\n");
+            fprintf(stdout, "    - Go Fish, Player 2 draws a card\n");
 
         int next_book_i = 0;
         while(current->book[next_book_i] != 0) {
             next_book_i++;
         }
-
         add_card(current, fished_card);
         if(current->book[next_book_i] != 0)
-            fprintf(stdout, "Player %d books %s", ((current == &user) ? 1 : 2), pR(fished_card->rank));
+            fprintf(stdout, "    - Player %d books %s\n", ((current == &user) ? 1 : 2), pR(fished_card->rank));
 
         /* If a book was added or the asked rank was drawn, play again */
         if(current->book[next_book_i] != 0 || fished_card->rank == r) {
             next_player = current;
-            fprintf(stdout, "Player %d gets another turn", ((current == &user) ? 1 : 2));
+            fprintf(stdout, "    - Player %d gets another turn\n", ((current == &user) ? 1 : 2));
         } else { /* Otherwise, switch players' turns */
             next_player = other_player;
-            fprintf(stdout, "Player %d's turn", ((next_player == &user) ? 1 : 2));
+            fprintf(stdout, "    - Player %d's turn\n", ((next_player == &user) ? 1 : 2));
         }
     } else { /* Transfer cards, play again */
-        //TODO: "has" PRINTOUTS!
+        /* Print the cards of the guessed rank that each player has */
+        struct player* print_player = current;
+        int i;
+        for(i = 0; i < 2; i++) {
+            fprintf(stdout, "    - Player %d has ", ((print_player == &user) ? 1 : 2));
+            int j;
+            struct hand* h = print_player->card_list;
+            int rank_count = 0;
+            for(j = 0; j < print_player->hand_size && h != NULL; j++) {
+                if(h->top.rank == r) {
+                    if(rank_count++ > 0)
+                        fprintf(stdout, ", ");
+                    fprintf(stdout, "%s%c", pR(r), h->top.suit);
+                }
+
+                h = h->next;
+            }
+            fprintf(stdout, "\n");
+            print_player = (current == &user) ? &computer : &user; /* Switch to other player */
+        }
+
         int next_book_i = 0;
         while(current->book[next_book_i] != 0) {
             next_book_i++;
         }
-
         transfer_cards(other_player, current, r);
         if(current->book[next_book_i] != 0)
-            fprintf(stdout, "Player %d books %s", ((current == &user) ? 1 : 2), pR(r));
+            fprintf(stdout, "    - Player %d books %s\n", ((current == &user) ? 1 : 2), pR(r));
 
         /* If a book was added, play again */
         if(current->book[next_book_i] != 0) {
             next_player = current;
-            fprintf(stdout, "Player %d gets another turn", ((current == &user) ? 1 : 2));
+            fprintf(stdout, "    - Player %d gets another turn\n", ((current == &user) ? 1 : 2));
         } else { /* Otherwise, switch players' turns */
             next_player = other_player;
-            fprintf(stdout, "Player %d's turn", ((next_player == &user) ? 1 : 2));
+            fprintf(stdout, "    - Player %d's turn\n", ((next_player == &user) ? 1 : 2));
         }
     }
-
-    fprintf(stdout, "\n");
 }
 
 /*
@@ -156,10 +181,11 @@ void game_loop() {
  * Return: 1 to play again, 0 to exit
  */
 int game_end() {
-    fprintf(stdout, "(debug)###BEGIN game_end###\n");
+    struct player* other_player = (current == &user) ? &computer : &user;
+    
     /* Count books of loser */
     int count = 0;
-    while(next_player->book[count] != 0 && count < 6) { /* Last slot (index 6) will always be empty since they lost */
+    while(other_player->book[count] != 0 && count < 6) { /* Last slot (index 6) will always be empty since they lost */
         count++;
     }
     if(current == &user) { /* User won :D */

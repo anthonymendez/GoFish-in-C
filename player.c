@@ -301,17 +301,10 @@ int reset_player(struct player* target) {
         target->book[i] = 0;
     }
 
-    if(i != 7) {
+    fprintf(stdout, "(debug)handsize after reset: %d\n", target->hand_size);
+    if(i != 7 || target->hand_size != 0) {
         return -1;
     }
-
-    /* Set hand_size to 0 */
-    target->hand_size = 0;
-
-    if(target->hand_size != 0) {
-        return -1;
-    }
-
     return 0;
 }
 
@@ -329,7 +322,6 @@ int reset_player(struct player* target) {
 char computer_play(struct player* target) {
     int i;
     int randIndex = rand() % target->hand_size;
-    fprintf(stdout, "ind:%d\n", randIndex);
     struct hand* current_hand = target->card_list;
     for(i = 0; i < randIndex; i++) {
         current_hand = current_hand->next;
@@ -351,7 +343,6 @@ char computer_play(struct player* target) {
  *   target: the player's hand to check
  * 
  *   returns: return a valid selected rank
- *   TODO: TEST
  */
 char user_play(struct player* target) {
     char rank;
