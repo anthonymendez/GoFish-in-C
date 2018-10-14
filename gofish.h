@@ -25,8 +25,10 @@ void game_start();
  * -------------------
  * Called after game_start.
  * For more info, read notes.txt
+ * 
+ * Return: 1 if there is a winner, 0 otherwise
  */
-void game_loop();
+int game_loop();
 
 /*
  * Function: game_end

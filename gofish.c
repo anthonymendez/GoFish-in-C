@@ -26,9 +26,9 @@ int main(int args, char* argv[]) {
     do {
         game_start();
         do {
-            game_loop(); /* Play a round */
-            if(game_over(current))
-                break;
+            /* Play a round */
+            if(game_loop())
+                break; /* If there is a winner, go to game_end */
             current = next_player;
         } while(1);
     } while(game_end());
@@ -68,8 +68,10 @@ void game_start() {
  * -------------------
  * Called after game_start.
  * For more info, read notes.txt
+ * 
+ * Return: 1 if there is a winner, 0 otherwise
  */
-void game_loop() {
+int game_loop() {
     fprintf(stdout, "\n");
 
     /* Print hand and book statuses */
@@ -83,6 +85,14 @@ void game_loop() {
     print_book(&computer);
 
     struct player* other_player = (current == &user) ? &computer : &user;
+
+    if(game_over(current)) {
+        return 1;
+    }
+    if(game_over(other_player)) { /* Shouldn't happen */
+        current = other_player; /* Signify the correct winner */
+        return 1;
+    }
 
     /* TODO:
     "If a player runs out of cards, then they have to draw a card on their next turn.
@@ -166,6 +176,7 @@ void game_loop() {
             fprintf(stdout, "    - Player %d's turn\n", ((next_player == &user) ? 1 : 2));
         }
     }
+    return 0;
 }
 
 /*
@@ -195,7 +206,7 @@ int game_end() {
     }
     /* TODO: Make sure printouts are exactly correct */
 
-    fprintf(stdout, "Do you want to play again [Y/N]: ");
+    fprintf(stdout, "\nDo you want to play again [Y/N]: ");
     char yn;
     scanf("%s", &yn);
     if(yn == 'Y') {
