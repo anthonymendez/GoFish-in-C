@@ -22,7 +22,7 @@ int main(int args, char* argv[]) {
     /* TODO: Remove after testing! */
     //test();
     //return 0;
-    return game_end();
+
     do {
         game_start();
         do {
@@ -151,6 +151,10 @@ int game_loop() {
         struct player* print_player = current;
         int i;
         for(i = 0; i < 2; i++) {
+            if (current == &computer && print_player == &computer) {
+                print_player = (current == &user) ? &computer : &user; /* Switch to other player */
+                continue;
+            }
             fprintf(stdout, "    - Player %d has ", ((print_player == &user) ? 1 : 2));
             int j;
             struct hand* h = print_player->card_list;
