@@ -35,7 +35,6 @@ int shuffle() {
      * Fisher-Yates Shuffle
      * https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
      */
-    srand(time(0));
     for(i = 51; i > 0; i--) {
         j = rand() % i;
         struct card temp = deck_instance.list[i];
