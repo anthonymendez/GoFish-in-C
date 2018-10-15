@@ -95,27 +95,26 @@ int game_loop() {
         return 1;
     }
 
-    /* TODO:
+    /*
     "If a player runs out of cards, then they have to draw a card on their next turn.
     It does not end the game." -Irwin (piazza)
-    So, here, if hand size is 0:
-        Draw a card
-        next_player = other_player;
-        return
-        Printout???
     */
-
-    /* Get rank guess input */
     char r;
-    if(current == &user) { /* User's turn */
-        r = user_play(current);
-    } else { /* Computer's turn */
-        r = computer_play(current);
-    }
+    if(current->hand_size > 0) { /* Non-empty hand */
+        /* Get rank guess input */
+        if(current == &user) { /* User's turn */
+            r = user_play(current);
+        } else { /* Computer's turn */
+            r = computer_play(current);
+        }
+    } else /* Empty hand */
+        r = 'X'; /* Invalid rank, so search will always fail and the player will Go Fish */
 
     /* Handle input */
     if(search(other_player, r) == 0) { /* Go Fish */
-        fprintf(stdout, "    - Player %d has no %s's\n", ((current == &user) ? 2 : 1), pR(r));
+        if(r != 'X') /* Non-empty hand */
+            fprintf(stdout, "    - Player %d has no %s's\n", ((current == &user) ? 2 : 1), pR(r));
+
         struct card* fished_card = next_card(); /* TODO: Handle empty deck (here and elsewhere) */
         if(current == &user)
             fprintf(stdout, "    - Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
