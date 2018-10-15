@@ -256,18 +256,10 @@ int transfer_cards(struct player* src, struct player* dest, char rank) {
  *   Return: 1 if game is over, 0 if game is not over
  */
 int game_over(struct player* target) {
-    if(target == NULL)
-        return -1;
-
     int i;
     for(i = 0; i < 7; i++) {
         if(target->book[i] == '\0' || target->book[i] == 0)
             return 0;
-    }
-
-    /* Something went wrong with looping */
-    if(i != 7) {
-        return -1;
     }
 
     return 1;
