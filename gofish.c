@@ -22,7 +22,6 @@ int main(int args, char* argv[]) {
     /* TODO: Remove after testing! */
     //test();
     //return 0;
-    return game_end();
 
     do {
         game_start();
@@ -115,28 +114,32 @@ int game_loop() {
         if(r != 'X') /* Non-empty hand */
             fprintf(stdout, "    - Player %d has no %s's\n", ((current == &user) ? 2 : 1), pR(r));
 
-        struct card* fished_card = next_card(); /* TODO: Handle empty deck (here and elsewhere) */
-        if(current == &user)
-            fprintf(stdout, "    - Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
-        else {
-            if (fished_card->rank == r) {
-                fprintf(stdout, "    - Go Fish, Player 2 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
-            }
-            else {
-                fprintf(stdout, "    - Go Fish, Player 2 draws a card\n");
-            }
-        }
-
+        struct card* fished_card = next_card();
         int next_book_i = 0;
-        while(current->book[next_book_i] != 0) {
-            next_book_i++;
-        }
-        add_card(current, fished_card);
-        if(current->book[next_book_i] != 0)
-            fprintf(stdout, "    - Player %d books %s\n", ((current == &user) ? 1 : 2), pR(fished_card->rank));
+        if (fished_card != NULL) {
+            if(current == &user)
+                fprintf(stdout, "    - Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
+            else {
+                if (fished_card->rank == r) {
+                    fprintf(stdout, "    - Go Fish, Player 2 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
+                }
+                else {
+                    fprintf(stdout, "    - Go Fish, Player 2 draws a card\n");
+                }
+            }
 
+           while(current->book[next_book_i] != 0) {
+                next_book_i++;
+            }
+            add_card(current, fished_card);
+            if(current->book[next_book_i] != 0)
+                fprintf(stdout, "    - Player %d books %s\n", ((current == &user) ? 1 : 2), pR(fished_card->rank));
+        }
         /* If a book was added or the asked rank was drawn, play again */
-        if(current->book[next_book_i] != 0 || fished_card->rank == r) {
+        if(fished_card != NULL && (
+            current->book[next_book_i] != 0 || 
+            fished_card->rank == r)
+          ) {
             next_player = current;
             fprintf(stdout, "    - Player %d gets another turn\n", ((current == &user) ? 1 : 2));
         } else { /* Otherwise, switch players' turns */
