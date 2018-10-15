@@ -118,8 +118,14 @@ int game_loop() {
         struct card* fished_card = next_card(); /* TODO: Handle empty deck (here and elsewhere) */
         if(current == &user)
             fprintf(stdout, "    - Go Fish, Player 1 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
-        else
-            fprintf(stdout, "    - Go Fish, Player 2 draws a card\n");
+        else {
+            if (fished_card->rank == r) {
+                fprintf(stdout, "    - Go Fish, Player 2 draws %s%c\n", pR(fished_card->rank), fished_card->suit);
+            }
+            else {
+                fprintf(stdout, "    - Go Fish, Player 2 draws a card\n");
+            }
+        }
 
         int next_book_i = 0;
         while(current->book[next_book_i] != 0) {
