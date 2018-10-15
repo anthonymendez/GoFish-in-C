@@ -1,8 +1,23 @@
-TODO LIST:
-Structure Program
-Fill in Functions from Header Files: deck.c, card.c, player.c, etc.
-	
-Anthony Mendez Completed Functions:
-	
+Anthony Mendez:
+add_card
+remove_card
+check_add_book
+search
+transfer_cards
+game_over
+reset_player
+computer_play
+shuffle
+deal_player_cards
+next_card
+deck_size
+
 Joshua Howell:
-	
+user_play
+main
+game_start
+game_loop
+game_end
+pR
+print_hand
+print_book
