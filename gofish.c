@@ -22,7 +22,7 @@ int main(int args, char* argv[]) {
     /* TODO: Remove after testing! */
     //test();
     //return 0;
-
+    return game_end();
     do {
         game_start();
         do {
@@ -214,14 +214,14 @@ int game_end() {
         fprintf(stdout, "Player 2 Wins! 7-%d\n", count);
     }
 
-    char yn[2];
+    char yn[3] = "";
     int tryAgain = 0;
     do {
         if(tryAgain) {
             fprintf(stdout, "Error - must enter \"Y\" or \"N\"");
         }
         fprintf(stdout, "\nDo you want to play again [Y/N]: ");
-        scanf("%s", &yn);
+        scanf("%2s", &yn);
         tryAgain = 1;
 
         while(getchar() != '\n');
