@@ -213,7 +213,6 @@ int game_end() {
     } else {
         fprintf(stdout, "Player 2 Wins! 7-%d\n", count);
     }
-    /* TODO: Make sure printouts are exactly correct */
 
     char yn[2];
     int tryAgain = 0;
