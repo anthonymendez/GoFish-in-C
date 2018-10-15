@@ -292,7 +292,6 @@ int reset_player(struct player* target) {
         target->book[i] = 0;
     }
 
-    fprintf(stdout, "(debug)handsize after reset: %d\n", target->hand_size);
     if(i != 7 || target->hand_size != 0) {
         return -1;
     }
