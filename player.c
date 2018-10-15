@@ -283,7 +283,6 @@ int game_over(struct player* target) {
  *   target: player to reset
  * 
  *   Return: 0 if no error, and non-zero on error.
- *   TODO: TEST
  */
 int reset_player(struct player* target) {
     /* Free card_list */
