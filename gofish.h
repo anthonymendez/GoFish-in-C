@@ -44,10 +44,26 @@ int game_loop();
  */
 int game_end();
 
+/*
+ * Function: pR
+ * ------------
+ *
+ * Return:
+ */
 const char* pR(char r);
 
+/*
+ * Function: print_hand
+ * --------------------
+ *
+ */
 void print_hand(struct player* target);
 
+/*
+ * Function: print_book
+ * --------------------
+ *
+ */
 void print_book(struct player* target);
 
 /*
