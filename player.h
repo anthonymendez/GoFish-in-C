@@ -107,7 +107,7 @@ int game_over(struct player* target);
  * Function: reset_player
  * ----------------------
  * 
- * Reset player by free'ing any memory of cards remaining in hand,
+ * Reset player by free'ing any memory of cards remaining in hand, 
  * and re-initializes the book.  Used when playing a new game.
  * 
  * target: player to reset
@@ -116,7 +116,7 @@ int game_over(struct player* target);
  */
 int reset_player(struct player* target);
 
-/* 
+/*
  * Function: computer_play
  * -----------------------
  * 

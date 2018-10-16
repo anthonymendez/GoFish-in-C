@@ -31,7 +31,7 @@ int shuffle() {
         return -1;
     }
 
-    /* Shuffle Deck 
+    /* Shuffle Deck
      * Fisher-Yates Shuffle
      * https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
      */
@@ -108,7 +108,7 @@ struct card* next_card() {
  */
 size_t deck_size() {
     if(deck_instance.list[0].suit == 0 || 
-       deck_instance.list[0].rank == 0 ||
+       deck_instance.list[0].rank == 0 || 
        deck_instance.top_card < 0)
         return 0;
 

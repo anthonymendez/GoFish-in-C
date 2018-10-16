@@ -53,11 +53,11 @@ int remove_card(struct player* target, struct card* old_card) {
     if(target->hand_size <= 0)
         return -1;
 
-    /* Go through and find our card from old_card 
-     * If we find it, we set found = 1, and break
+    /* Go through and find our card from old_card.
+     * If we find it, we set found = 1, and break 
      * out of the loop.
-     * If not, we go through the entire loop, and
-     * return -1
+     * If not, we go through the entire loop, and 
+     * return -1.
      */
     int i;
     int found = 0;
@@ -80,7 +80,7 @@ int remove_card(struct player* target, struct card* old_card) {
 
     if(before == NULL || 
        &(before->top.suit) == NULL || 
-       before->top.suit == '\0' ||
+       before->top.suit == '\0' || 
        before->top.suit == 0) {
         /* Handle removing card from beginning of the list */
         target->card_list = target->card_list->next;
@@ -91,7 +91,7 @@ int remove_card(struct player* target, struct card* old_card) {
     } else if(current == NULL || 
               &(current->top.suit) == NULL || 
               current->top.suit == '\0') {
-        /* If we're getting NULL from our pointer,
+        /* If we're getting NULL from our pointer, 
          * char memory address or we're getting 0 
          * from our char, we return -1 as something 
          * went wrong.
@@ -128,7 +128,7 @@ char check_add_book(struct player* target) {
     /* Get last card in list because we know that's the only one with the possibility of being a book */
     struct hand* last_hand = target->card_list;
     int i = 0;
-    while(i++ < target->hand_size && last_hand->next != NULL){
+    while(i++ < target->hand_size && last_hand->next != NULL) {
         last_hand = last_hand->next;
     }
     int count = 1;
@@ -156,8 +156,8 @@ char check_add_book(struct player* target) {
         }
         current = current->next;
     }
-    /* We count is 4, then we have 4 cards of the same rank 
-     * We remove the cards from the players hand, add the
+    /* We count is 4, then we have 4 cards of the same rank.
+     * We remove the cards from the players hand, add the 
      * rank to their book, and return the rank.
      */
     if(count == 4) {
@@ -223,9 +223,9 @@ int transfer_cards(struct player* src, struct player* dest, char rank) {
     int i;
     int transferred = 0;
     struct hand* src_hand = src->card_list;
-    /* Go through, add all matching cards to dest hand,
-     * remove from src hand, set src hand to next hand,
-     * and increment transferred any matching cards
+    /* Go through, add all matching cards to dest hand, 
+     * remove from src hand, set src hand to next hand, 
+     * and increment transferred any matching cards.
      */
     for(i = 0; src_hand != NULL; i++) {
         if(src_hand->top.rank == rank) {
@@ -269,7 +269,7 @@ int game_over(struct player* target) {
  * Function: reset_player
  * ----------------------
  * 
- * Reset player by free'ing any memory of cards remaining in hand,
+ * Reset player by free'ing any memory of cards remaining in hand, 
  * and re-initializes the book.  Used when playing a new game.
  * 
  * target: player to reset
@@ -298,7 +298,7 @@ int reset_player(struct player* target) {
     return 0;
 }
 
-/* 
+/*
  * Function: computer_play
  * -----------------------
  * 
