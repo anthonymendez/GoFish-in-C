@@ -205,7 +205,7 @@ int game_end() {
             fprintf(stdout, "Error - must enter \"Y\" or \"N\"");
         }
         fprintf(stdout, "\nDo you want to play again [Y/N]: ");
-        scanf("%2s", &yn);
+        scanf("%2s", yn);
         tryAgain = 1;
 
         while(getchar() != '\n');
@@ -222,8 +222,17 @@ int game_end() {
     }while(1);
 }
 
-/* TODO: Document! Including in header! */
-const char* pR(char r) { /* printableRank */
+/*
+ * Function: pR
+ * ------------
+ * The name is short for printableRank
+ * Formats a rank for output.
+ * Specifically, 'T' returns "10"
+ * and all other input is "unchanged".
+ * 
+ * Return: String representing rank r
+ */
+const char* pR(char r) {
     if(r == 'T') {
         static char ten[] = "10";
         return ten;
@@ -234,7 +243,16 @@ const char* pR(char r) { /* printableRank */
     return rS;
 }
 
-/* TODO: Document! Including in header! */
+/*
+ * Function: print_hand
+ * --------------------
+ * Prints space-separated 2-character
+ * representations of the cards in
+ * player target's hand followed by a
+ * newline.
+ * The rank character precedes the
+ * suit character.
+ */
 void print_hand(struct player* target) {
     if(target->hand_size == 0) {
         fprintf(stdout, "\n");
@@ -253,7 +271,14 @@ void print_hand(struct player* target) {
     fprintf(stdout, "\n");
 }
 
-/* TODO: Document! Including in header! */
+/*
+ * Function: print_book
+ * --------------------
+ * Prints space-separated
+ * representations of the ranks of the
+ * books in player target's hand
+ * followed by a newline.
+ */
 void print_book(struct player* target) {
     if(target == NULL || target->book == NULL || target->book[0] == '\0' || target->book[0] == 0) {
         fprintf(stdout, "\n");

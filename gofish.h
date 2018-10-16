@@ -47,22 +47,34 @@ int game_end();
 /*
  * Function: pR
  * ------------
- *
- * Return:
+ * The name is short for printableRank
+ * Formats a rank for output.
+ * Specifically, 'T' returns "10"
+ * and all other input is "unchanged".
+ * 
+ * Return: String representing rank r
  */
 const char* pR(char r);
 
 /*
  * Function: print_hand
  * --------------------
- *
+ * Prints space-separated 2-character
+ * representations of the cards in
+ * player target's hand followed by a
+ * newline.
+ * The rank character precedes the
+ * suit character.
  */
 void print_hand(struct player* target);
 
 /*
  * Function: print_book
  * --------------------
- *
+ * Prints space-separated
+ * representations of the ranks of the
+ * books in player target's hand
+ * followed by a newline.
  */
 void print_book(struct player* target);
 
