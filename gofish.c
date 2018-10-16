@@ -2,26 +2,8 @@
 #include <time.h>
 #include "gofish.h"
 
-/* TODO: Remove after testing! */
-void test() {
-    game_start();
-    current->book[0] = '3';
-    current->book[1] = 'T';
-    current->book[2] = 'Q';
-    print_hand(current);
-    print_book(current);
-    fprintf(stdout, "book[3] (between --'s): --%c-- (%d)\n", current->book[3], current->book[3] == 0);
-    fprintf(stdout, "userplay:\n");
-    char upo = user_play(current);
-    fprintf(stdout, "userplay output (between --'s): --%c--\n", upo);
-}
-
 int main(int args, char* argv[]) {
     srand(time(NULL));
-
-    /* TODO: Remove after testing! */
-    //test();
-    //return 0;
 
     do {
         game_start();
@@ -77,8 +59,6 @@ int game_loop() {
     /* Print hand and book statuses */
     fprintf(stdout, "Player 1's Hand - ");
     print_hand(&user);
-    fprintf(stdout, "(debug)Player 2's Hand - ");
-    print_hand(&computer);
     fprintf(stdout, "Player 1's Book - ");
     print_book(&user);
     fprintf(stdout, "Player 2's Book - ");
