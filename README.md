@@ -9,7 +9,7 @@
 ## Description
 GoFish in C is a Human vs Computer card game of GoFish created in C. You are the Human. The program is the computer. 
 
-This program is the second assignment in ECE 373 Software Intensive Engineering.
+This program is the second assignment in ECE 373 Software Intensive Engineering. We were given basic header files with prototype functions and structs. With these and the guidelines provided by the assignment, we designed the game loop, filling in the functions, modified the struct, fixed edge cases. And created this.
 
 ## How To Play
 1. Run `make`
